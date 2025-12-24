@@ -12,7 +12,7 @@ variables:
   HOST_PORT: 80
   CONTAINER_PORT: 80
   SERVER_USERNAME: 'ubuntu'
-  SLACK_WEBHOOK_URL: 'https://hooks.slack.com/services/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'
+  SLACK_WEBHOOK_URL: 'https://hooks.slack.com/services/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'
 
 # Build de l'image 
 Build:
@@ -21,6 +21,8 @@ Build:
   services:
     - name: docker:dind
       alias: docker 
+  before_script:
+    - apk add --no-cache curl 
   script:
     - docker build --no-cache -t $IMAGE_NAME:$IMAGE_TAG .
     - docker save -o mini-projet-gitlab.tar $IMAGE_NAME:$IMAGE_TAG
@@ -62,6 +64,8 @@ Test:
 
 .release_image: &release_image 
   stage: release 
+  before_script:
+    - apk add --no-cache curl 
   script:
     # A utiliser lorsque la variable est dispo sur gitlab
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin 
