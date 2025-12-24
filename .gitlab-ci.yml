@@ -7,7 +7,7 @@ stages:
 variables:
   IMAGE_NAME: 'mini-projet-gitlab'
   IMAGE_TAG: 'v1'
-  DOCKER_USERNAME: 'ulrichsteve'
+  DOCKER_USERNAME: 'fbomlb'
   # DOCKER_PASSWORD: 
   HOST_PORT: 80
   CONTAINER_PORT: 80
@@ -63,7 +63,10 @@ Test:
 .release_image: &release_image 
   stage: release 
   script:
+    # A utiliser lorsque la variable est dispo sur gitlab
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin 
+    # A utiliser lorsque la variable est definie dans le code (non recommande)
+    #- docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - docker load -i mini-projet-gitlab.tar 
     - docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG
     - >
@@ -106,25 +109,17 @@ Release_Image:
 Deploy_Review:
   stage: deploy 
   variables:
-    SERVER_IP: '44.203.182.104'
+    SERVER_IP: '35.180.87.174'
   image: alpine
   <<: *deploy_app
   environment:
     name: Review 
 
-Deploy_Staging:
-  stage: deploy 
-  variables:
-    SERVER_IP: '52.207.59.87'
-  image: alpine
-  <<: *deploy_app
-  environment:
-    name: Staging
 
 Deploy_Production:
   stage: deploy 
   variables:
-    SERVER_IP: '3.83.224.251'
+    SERVER_IP: '15.188.15.251'
   image: alpine
   <<: *deploy_app
   environment:
